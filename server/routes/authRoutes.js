@@ -38,7 +38,7 @@ router.post('/register', authController.register);
 // Kullanıcı girişi (Login)
 /**
  * @swagger
- * /login:
+ * /api/auth/login:
  *   post:
  *     summary: User login
  *     description: User login and receive a token
@@ -66,7 +66,7 @@ router.post('/login', authController.login);
 // Kullanıcı çıkışı (Logout)
 /**
  * @swagger
- * /logout:
+ * /api/auth/logout:
  *   post:
  *     summary: User logout
  *     description: Logout the user
@@ -78,23 +78,5 @@ router.post('/login', authController.login);
  */
 router.post('/logout', authController.logout);
 
-// Token doğrulama (verifyToken middleware kullanarak)
-/**
- * @swagger
- * /verify:
- *   get:
- *     summary: Verify JWT token
- *     description: Verify if the provided token is valid
- *     tags:
- *       - Authentication
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Token is valid
- *       401:
- *         description: Invalid or expired token
- */
-router.get('/verify', verifyToken, authController.verifyToken);
 
 module.exports = router;

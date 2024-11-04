@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const serviceController = require('../controllers/service.js');
-const { verifyToken } = require('../middleware/authMiddleware.js');
+const { verifyToken,isAdmin } = require('../middleware/authMiddleware.js');
 
 /**
  * @swagger
@@ -12,32 +12,32 @@ const { verifyToken } = require('../middleware/authMiddleware.js');
 
 /**
  * @swagger
- * /services:
+ * /api/services/all:
  *   get:
  *     summary: Get all services
  *     description: Retrieve all services for the authenticated user.
  *     tags: [Service]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: A list of services
  *       401:
  *         description: Unauthorized
  */
-router.get('/', verifyToken, serviceController.getServices);
+router.get('/all', serviceController.getServices);
 
 /**
  * @swagger
- * /services/{id}:
+ * /api/services:
  *   get:
  *     summary: Get a specific service
  *     description: Retrieve details of a specific service by ID.
  *     tags: [Service]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
- *       - in: path
+ *       - in: query
  *         name: id
  *         schema:
  *           type: string
@@ -51,17 +51,17 @@ router.get('/', verifyToken, serviceController.getServices);
  *       404:
  *         description: Service not found
  */
-router.get('/:id', verifyToken, serviceController.getServiceById);
+router.get('/', verifyToken, isAdmin, serviceController.getServiceById);
 
 /**
  * @swagger
- * /services:
+ * /api/services/create:
  *   post:
  *     summary: Create a new service
  *     description: Create a new service for the authenticated user.
  *     tags: [Service]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: [] 
  *     requestBody:
  *       required: true
  *       content:
@@ -70,14 +70,21 @@ router.get('/:id', verifyToken, serviceController.getServiceById);
  *             type: object
  *             required:
  *               - name
+ *               - duration
  *               - price
  *             properties:
  *               name:
  *                 type: string
  *                 description: Service name
+ *               duration:
+ *                 type: number
+ *                 description: Duration of the service in minutes
  *               price:
  *                 type: number
  *                 description: Service price
+ *               description:
+ *                 type: string
+ *                 description: Additional information about the service
  *     responses:
  *       201:
  *         description: Service created successfully
@@ -86,37 +93,44 @@ router.get('/:id', verifyToken, serviceController.getServiceById);
  *       401:
  *         description: Unauthorized
  */
-router.post('/', verifyToken, serviceController.createService);
+router.post('/create',verifyToken, isAdmin, serviceController.createService);
 
 /**
  * @swagger
- * /services/{id}:
+ * /api/services/update:
  *   put:
  *     summary: Update a service
  *     description: Update an existing service by ID.
  *     tags: [Service]
  *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: Service ID
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - id
+ *               - name
+ *               - duration
+ *               - price
  *             properties:
+ *               id:
+ *                 type: string
+ *                 description: Service id
  *               name:
  *                 type: string
  *                 description: Service name
+ *               duration:
+ *                 type: number
+ *                 description: Duration of the service in minutes
  *               price:
  *                 type: number
  *                 description: Service price
+ *               description:
+ *                 type: string
+ *                 description: Additional information about the service
  *     responses:
  *       200:
  *         description: Service updated successfully
@@ -127,19 +141,19 @@ router.post('/', verifyToken, serviceController.createService);
  *       404:
  *         description: Service not found
  */
-router.put('/:id', verifyToken, serviceController.updateService);
+router.put('/update',verifyToken, isAdmin, serviceController.updateService);
 
 /**
  * @swagger
- * /services/{id}:
+ * /api/services:
  *   delete:
  *     summary: Delete a service
  *     description: Delete an existing service by ID.
  *     tags: [Service]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
- *       - in: path
+ *       - in: query
  *         name: id
  *         schema:
  *           type: string
@@ -153,6 +167,6 @@ router.put('/:id', verifyToken, serviceController.updateService);
  *       404:
  *         description: Service not found
  */
-router.delete('/:id', verifyToken, serviceController.deleteService);
+router.delete('/',verifyToken, isAdmin, serviceController.deleteService);
 
 module.exports = router;

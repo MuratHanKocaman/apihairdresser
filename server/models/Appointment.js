@@ -1,12 +1,14 @@
 const mongoose = require('mongoose');
 
 const appointmentSchema = new mongoose.Schema({
-  customer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Müşteri
-  staff: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Kuaför
-  service: { type: mongoose.Schema.Types.ObjectId, ref: 'Service', required: true }, // Hizmet türü
-  appointmentDate: { type: Date, required: true }, // Randevu tarihi ve saati
+  customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  name: { type: String, required: function () { return !this.customerId; } },
+  phone: { type: String, required: function () { return !this.customerId; } },
+  staffId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  serviceId: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service', required: true }],
+  appointmentDate: { type: Date, required: true }, // Tek bir tarih olarak ayarlandı
   status: { type: String, enum: ['pending', 'confirmed', 'completed', 'canceled'], default: 'pending' },
-  notes: { type: String }, // Müşteri istekleri, özel notlar
+  notes: { type: String },
 }, { timestamps: true });
 
 const Appointment = mongoose.model('Appointment', appointmentSchema);

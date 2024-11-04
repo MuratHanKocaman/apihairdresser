@@ -6,109 +6,122 @@ const { verifyToken } = require('../middleware/authMiddleware.js');
 /**
  * @swagger
  * tags:
- *   name: Appointment
+ *   name: Appointments
  *   description: Appointment management API
  */
 
+// Tüm randevuları listele
 /**
  * @swagger
- * /appointments:
+ * /api/appointments:
  *   get:
  *     summary: Get all appointments
- *     description: Retrieve all appointments for the authenticated user.
- *     tags: [Appointment]
- *     security:
- *       - bearerAuth: []
+ *     description: Retrieve a list of all appointments.
+ *     tags: [Appointments]
  *     responses:
  *       200:
- *         description: A list of appointments
+ *         description: Successfully retrieved list of appointments
  *       401:
  *         description: Unauthorized
  */
-router.get('/', verifyToken, appointmentController.getAppointments);
+router.get('/', appointmentController.getAppointments);
 
+// Tek bir randevuyu getir
 /**
  * @swagger
- * /appointments/{id}:
+ * /api/appointments/appointment:
  *   get:
- *     summary: Get a specific appointment
- *     description: Retrieve details of a specific appointment by ID.
- *     tags: [Appointment]
+ *     summary: Get appointment by ID
+ *     description: Retrieve a single appointment by its ID.
+ *     tags: [Appointments]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
- *       - in: path
+ *       - in: query
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: Appointment ID
+ *         description: The ID of the appointment to retrieve
  *     responses:
  *       200:
- *         description: Appointment details
- *       401:
- *         description: Unauthorized
+ *         description: Successfully retrieved appointment
  *       404:
  *         description: Appointment not found
+ *       401:
+ *         description: Unauthorized
  */
-router.get('/:id', verifyToken, appointmentController.getAppointmentById);
+router.get('/appointment', verifyToken, appointmentController.getAppointmentById);
 
+// Yeni randevu oluştur
 /**
  * @swagger
- * /appointments:
+ * /api/appointments:
  *   post:
- *     summary: Create a new appointment
- *     description: Create a new appointment for the authenticated user.
- *     tags: [Appointment]
- *     security:
- *       - bearerAuth: []
+ *     summary: Yeni bir randevu oluştur
+ *     description: Yeni bir randevu oluşturmak için, ya kullanıcı ID'si ya da isim ve telefon bilgisi gereklidir.
+ *     tags: [Appointments]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - date
- *               - time
- *               - service
  *             properties:
- *               date:
+ *               customerId:
  *                 type: string
- *                 format: date
- *                 description: Appointment date
- *               time:
+ *                 description: Müşteri ID'si (isim ve telefon verildiğinde isteğe bağlı)
+ *               name:
  *                 type: string
- *                 description: Appointment time
- *               service:
+ *                 description: Müşteri ismi (customerId yoksa zorunlu)
+ *               phone:
  *                 type: string
- *                 description: Service to be provided
+ *                 description: Müşteri telefon numarası (customerId yoksa zorunlu)
+ *               staffId:
+ *                 type: string
+ *                 description: Personel ID'si (zorunlu)
+ *               serviceId:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Hizmet ID'lerinin listesi
+ *               appointmentDate:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Randevu tarihi ve saati
+ *               status:
+ *                 type: string
+ *                 description: Randevu durumu (isteğe bağlı)
+ *               notes:
+ *                 type: string
+ *                 description: Ek notlar (isteğe bağlı)
  *     responses:
  *       201:
- *         description: Appointment created successfully
+ *         description: Randevu başarıyla oluşturuldu
  *       400:
- *         description: Invalid input
+ *         description: Hatalı istek
  *       401:
- *         description: Unauthorized
+ *         description: Yetkisiz erişim
  */
-router.post('/', verifyToken, appointmentController.createAppointment);
+router.post('/', appointmentController.createAppointment);
 
+// Randevuyu güncelle
 /**
  * @swagger
- * /appointments/{id}:
+ * /api/appointments/update:
  *   put:
  *     summary: Update an appointment
- *     description: Update an existing appointment by ID.
- *     tags: [Appointment]
+ *     description: Update an existing appointment by its ID.
+ *     tags: [Appointments]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
- *       - in: path
+ *       - in: query
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: Appointment ID
+ *         description: The ID of the appointment to update
  *     requestBody:
  *       required: true
  *       content:
@@ -116,52 +129,66 @@ router.post('/', verifyToken, appointmentController.createAppointment);
  *           schema:
  *             type: object
  *             properties:
+ *               customerId:
+ *                 type: string
+ *                 description: Updated customer ID (optional)
+ *               staffId:
+ *                 type: string
+ *                 description: Updated staff ID
+ *               serviceId:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Array of updated service IDs
  *               date:
  *                 type: string
- *                 format: date
- *                 description: Appointment date
+ *                 description: Updated date (YYYY-MM-DD)
  *               time:
  *                 type: string
- *                 description: Appointment time
- *               service:
+ *                 description: Updated time (HH:MM)
+ *               status:
  *                 type: string
- *                 description: Service to be provided
+ *                 description: Updated status of the appointment
+ *               notes:
+ *                 type: string
+ *                 description: Updated notes
  *     responses:
  *       200:
  *         description: Appointment updated successfully
  *       400:
  *         description: Invalid input
- *       401:
- *         description: Unauthorized
  *       404:
  *         description: Appointment not found
+ *       401:
+ *         description: Unauthorized
  */
-router.put('/:id', verifyToken, appointmentController.updateAppointment);
+router.put('/update', verifyToken, appointmentController.updateAppointment);
 
+// Randevuyu sil
 /**
  * @swagger
- * /appointments/{id}:
+ * /api/appointments/delete:
  *   delete:
  *     summary: Delete an appointment
- *     description: Delete an existing appointment by ID.
- *     tags: [Appointment]
+ *     description: Delete an appointment by its ID.
+ *     tags: [Appointments]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
- *       - in: path
+ *       - in: query
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: Appointment ID
+ *         description: The ID of the appointment to delete
  *     responses:
  *       200:
  *         description: Appointment deleted successfully
- *       401:
- *         description: Unauthorized
  *       404:
  *         description: Appointment not found
+ *       401:
+ *         description: Unauthorized
  */
-router.delete('/:id', verifyToken, appointmentController.deleteAppointment);
+router.delete('/delete', verifyToken, appointmentController.deleteAppointment);
 
 module.exports = router;

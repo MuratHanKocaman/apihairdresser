@@ -54,11 +54,11 @@ app.get('/', (req, res) => {
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Route tanımlamaları
 app.use('/api/auth', authRoutes); // Authentication işlemleri burada
-app.use('/api/users', userRoutes); // Kullanıcı işlemleri
+app.use('/api/user', userRoutes); // Kullanıcı işlemleri
 app.use('/api/admin', verifyToken, isAdmin, adminRoutes); // Admin işlemleri
-app.use('/api/appointments', verifyToken, appointmentRoutes); // Randevu işlemleri
-app.use('/api/payments', verifyToken, paymentRoutes); // Ödeme işlemleri
-app.use('/api/services', verifyToken, serviceRoutes); // Hizmet işlemleri
+app.use('/api/appointments', appointmentRoutes); // Randevu işlemleri
+app.use('/api/payments', verifyToken, isAdmin, paymentRoutes); // Ödeme işlemleri
+app.use('/api/services',  serviceRoutes); // Hizmet işlemleri
 app.use('/api/settings', verifyToken, isAdmin, settingsRoutes); // Admin yetkisi gerektiren ayarlar ile ilgili işlemler
 
 

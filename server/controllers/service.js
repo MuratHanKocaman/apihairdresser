@@ -13,7 +13,8 @@ exports.getServices = async (req, res, next) => {
 // Tek bir hizmet getir
 exports.getServiceById = async (req, res, next) => {
   try {
-    const service = await Service.findById(req.params.id);
+    const service = await Service.findById(req.query.id);
+    console.log(service);
     if (!service) return res.status(404).json({ message: 'Service not found' });
     res.status(200).json(service);
   } catch (error) {
@@ -37,7 +38,7 @@ exports.createService = async (req, res, next) => {
 // Hizmeti güncelle
 exports.updateService = async (req, res, next) => {
   try {
-    const updatedService = await Service.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updatedService = await Service.findByIdAndUpdate(req.body.id, req.body, { new: true });
     if (!updatedService) return res.status(404).json({ message: 'Service not found' });
     res.status(200).json(updatedService);
   } catch (error) {
@@ -48,7 +49,7 @@ exports.updateService = async (req, res, next) => {
 // Hizmeti sil
 exports.deleteService = async (req, res, next) => {
   try {
-    const deletedService = await Service.findByIdAndDelete(req.params.id);
+    const deletedService = await Service.findByIdAndDelete(req.query.id);
     if (!deletedService) return res.status(404).json({ message: 'Service not found' });
     res.status(200).json({ message: 'Service deleted' });
   } catch (error) {

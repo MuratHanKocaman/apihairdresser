@@ -14,6 +14,21 @@ const options = {
         url: 'http://localhost:5000', // API'nizin çalıştığı URL
       },
     ],
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: 'apiKey',
+          in: 'header', // Token'ı başlık (header) alanında alacağını belirtiyoruz
+          name: 'Authorization', // Başlığın adı "Authorization" olacak
+          description: "Bearer token formatında giriniz: `Bearer <token>`",
+        },
+      },
+    },
+    security: [
+      {
+        BearerAuth: [],
+      },
+    ],
   },
   apis: ['./routes/*.js'], // Route dosyalarının konumu
 };

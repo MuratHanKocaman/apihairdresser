@@ -12,7 +12,7 @@ exports.updateUserRole = async (req, res, next) => {
     }
 
     // Mevcut rolü kontrol et ve geçerli roller arasında olmasını sağla
-    const validRoles = ['user', 'admin'];
+    const validRoles = ['customer', 'staff'];
     if (!validRoles.includes(role)) {
       return res.status(400).json({ message: 'Invalid role' });
     }
@@ -34,5 +34,30 @@ exports.getAllUsers = async (req, res, next) => {
     res.status(200).json(users);
   } catch (error) {
     next(error);
+  }
+};
+
+
+// Tek bir kullanıcı getir
+exports.getUserById = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.query.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
+// Kullanıcıyı sil
+exports.deleteUser = async (req, res, next) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.query.id);
+    if (!deletedUser) return res.status(404).json({ message: 'User not found' });
+    res.status(200).json({ message: 'User deleted' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

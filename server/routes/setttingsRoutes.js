@@ -7,21 +7,21 @@ const { verifyToken } = require('../middleware/authMiddleware.js');
  * @swagger
  * tags:
  *   name: Settings
- *   description: Settings management API
+ *   description: Ayarlar yönetim API'si
  */
 
 /**
  * @swagger
- * /settings:
+ * /api/settings:
  *   get:
- *     summary: Get all settings
- *     description: Retrieve all settings for the authenticated user.
+ *     summary: Tüm ayarları getir
+ *     description: Kimliği doğrulanmış kullanıcı için tüm ayarları getirir.
  *     tags: [Settings]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     responses:
  *       200:
- *         description: A list of settings
+ *         description: Ayarların listesi
  *         content:
  *           application/json:
  *             schema:
@@ -31,34 +31,98 @@ const { verifyToken } = require('../middleware/authMiddleware.js');
  *                 properties:
  *                   id:
  *                     type: string
- *                     description: The settings ID
- *                   name:
+ *                     description: Ayar ID'si
+ *                   businessName:
  *                     type: string
- *                     description: The name of the setting
- *                   value:
+ *                     description: İşletme adı
+ *                   address:
  *                     type: string
- *                     description: The value of the setting
+ *                     description: İşletme adresi
+ *                   email:
+ *                     type: string
+ *                     description: İletişim e-posta adresi
+ *                   phone:
+ *                     type: string
+ *                     description: İletişim numarası
+ *                   openingHours:
+ *                     type: object
+ *                     description: İşletme açılış saatleri
+ *                   socialMedia:
+ *                     type: object
+ *                     description: Sosyal medya hesapları
  *       401:
- *         description: Unauthorized
+ *         description: Yetkisiz
  */
 router.get('/', verifyToken, settingsController.getSettings);
 
+
 /**
  * @swagger
- * /settings/{id}:
- *   put:
- *     summary: Update a setting
- *     description: Update an existing setting by ID.
+ * /api/settings/create:
+ *   post:
+ *     summary: Yeni bir ayar oluştur
+ *     description: Kimliği doğrulanmış kullanıcı için yeni bir ayar oluşturur.
  *     tags: [Settings]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: [] 
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - businessName
+ *               - address
+ *               - email
+ *               - phone
+ *             properties:
+ *               businessName:
+ *                 type: string
+ *                 description: İşletme adı
+ *               address:
+ *                 type: string
+ *                 description: İşletme adresi
+ *               email:
+ *                 type: string
+ *                 description: İşletme e-posta adresi
+ *               phone:
+ *                 type: string
+ *                 description: İletişim numarası
+ *               openingHours:
+ *                 type: object
+ *                 description: İşletme açılış saatleri
+ *               socialMedia:
+ *                 type: object
+ *                 description: Sosyal medya hesapları
+ *     responses:
+ *       201:
+ *         description: Ayar başarıyla oluşturuldu
+ *       400:
+ *         description: Geçersiz giriş
+ *       401:
+ *         description: Yetkisiz
+ *       500:
+ *         description: Sunucu hatası
+ */
+router.post('/create', settingsController.createSettings);
+
+/**
+ * @swagger
+ * /api/settings:
+ *   put:
+ *     summary: Bir ayarı güncelle
+ *     description: ID ile mevcut bir ayarı günceller.
+ *     tags: [Settings]
+ *     security:
+ *       - BearerAuth: []
  *     parameters:
- *       - in: path
+ *       - in: query
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: Settings ID
+ *         description: Ayar ID'si
  *     requestBody:
  *       required: true
  *       content:
@@ -66,48 +130,60 @@ router.get('/', verifyToken, settingsController.getSettings);
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               businessName:
  *                 type: string
- *                 description: Setting name
- *               value:
+ *                 description: İşletme adı
+ *               address:
  *                 type: string
- *                 description: Setting value
+ *                 description: İşletme adresi
+ *               email:
+ *                 type: string
+ *                 description: İletişim e-posta adresi
+ *               phone:
+ *                 type: string
+ *                 description: İletişim numarası
+ *               openingHours:
+ *                 type: object
+ *                 description: İşletme açılış saatleri
+ *               socialMedia:
+ *                 type: object
+ *                 description: Sosyal medya hesapları
  *     responses:
  *       200:
- *         description: Setting updated successfully
+ *         description: Ayar başarıyla güncellendi
  *       400:
- *         description: Invalid input
+ *         description: Geçersiz giriş
  *       401:
- *         description: Unauthorized
+ *         description: Yetkisiz
  *       404:
- *         description: Setting not found
+ *         description: Ayar bulunamadı
  */
-router.put('/:id', verifyToken, settingsController.updateSettings);
+router.put('/', settingsController.updateSettings);
 
 /**
  * @swagger
- * /settings/{id}:
+ * /api/settings:
  *   delete:
- *     summary: Delete a setting
- *     description: Delete an existing setting by ID.
+ *     summary: Bir ayarı sil
+ *     description: ID ile mevcut bir ayarı siler.
  *     tags: [Settings]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     parameters:
- *       - in: path
+ *       - in: query
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: Settings ID
+ *         description: Ayar ID'si
  *     responses:
  *       200:
- *         description: Setting deleted successfully
+ *         description: Ayar başarıyla silindi
  *       401:
- *         description: Unauthorized
+ *         description: Yetkisiz
  *       404:
- *         description: Setting not found
+ *         description: Ayar bulunamadı
  */
-router.delete('/:id', verifyToken, settingsController.deleteSettings);
+router.delete('/', settingsController.deleteSettings);
 
 module.exports = router;
