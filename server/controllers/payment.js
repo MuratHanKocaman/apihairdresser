@@ -1,5 +1,5 @@
 const Payment = require("../models/Payment.js");
-const Appointment = require("./models/Appointment");
+const Appointment = require("../models/Appointment.js");
 
 // Tüm ödemeleri listele
 exports.getPayments = async (req, res, next) => {
