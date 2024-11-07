@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const settingsController = require('../controllers/settings.js');
-const { verifyToken } = require('../middleware/authMiddleware.js');
+const settingsController = require("../controllers/settings.js");
+const { verifyToken, isAdmin } = require("../middleware/authMiddleware.js");
 
 /**
  * @swagger
@@ -53,8 +53,7 @@ const { verifyToken } = require('../middleware/authMiddleware.js');
  *       401:
  *         description: Yetkisiz
  */
-router.get('/', verifyToken, settingsController.getSettings);
-
+router.get("/", verifyToken, settingsController.getSettings);
 
 /**
  * @swagger
@@ -64,7 +63,7 @@ router.get('/', verifyToken, settingsController.getSettings);
  *     description: Kimliği doğrulanmış kullanıcı için yeni bir ayar oluşturur.
  *     tags: [Settings]
  *     security:
- *       - BearerAuth: [] 
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -105,7 +104,7 @@ router.get('/', verifyToken, settingsController.getSettings);
  *       500:
  *         description: Sunucu hatası
  */
-router.post('/create', settingsController.createSettings);
+router.post("/create", isAdmin, verifyToken, settingsController.createSettings);
 
 /**
  * @swagger
@@ -158,7 +157,7 @@ router.post('/create', settingsController.createSettings);
  *       404:
  *         description: Ayar bulunamadı
  */
-router.put('/', settingsController.updateSettings);
+router.put("/", isAdmin, verifyToken, settingsController.updateSettings);
 
 /**
  * @swagger
@@ -184,6 +183,6 @@ router.put('/', settingsController.updateSettings);
  *       404:
  *         description: Ayar bulunamadı
  */
-router.delete('/', settingsController.deleteSettings);
+router.delete("/", isAdmin, verifyToken, settingsController.deleteSettings);
 
 module.exports = router;

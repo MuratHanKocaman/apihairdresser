@@ -77,7 +77,7 @@ app.use("/api/admin", verifyToken, isAdmin, adminRoutes); // Admin işlemleri
 app.use("/api/appointments", appointmentRoutes); // Randevu işlemleri
 app.use("/api/payments", verifyToken, isAdmin, paymentRoutes); // Ödeme işlemleri
 app.use("/api/services", serviceRoutes); // Hizmet işlemleri
-app.use("/api/settings", verifyToken, isAdmin, settingsRoutes); // Admin yetkisi gerektiren ayarlar ile ilgili işlemler
+app.use("/api/settings", settingsRoutes); // Admin yetkisi gerektiren ayarlar ile ilgili işlemler
 
 // Hataları yakala
 app.use((err, req, res, next) => {
