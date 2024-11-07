@@ -39,6 +39,7 @@ exports.createAppointment = async (req, res, next) => {
     appointmentDate,
     status,
     notes,
+    paymentId,
   } = req.body;
 
   if (!customerId && (!name || !phone)) {
@@ -56,6 +57,7 @@ exports.createAppointment = async (req, res, next) => {
     appointmentDate: new Date(appointmentDate), // Tek tarih olarak kaydediliyor
     status,
     notes,
+    paymentId,
   });
 
   try {
