@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const serviceController = require('../controllers/service.js');
-const { verifyToken,isAdmin } = require('../middleware/authMiddleware.js');
+const serviceController = require("../controllers/service.js");
+const { verifyToken, isAdmin } = require("../middleware/authMiddleware.js");
 
 /**
  * @swagger
@@ -25,7 +25,7 @@ const { verifyToken,isAdmin } = require('../middleware/authMiddleware.js');
  *       401:
  *         description: Unauthorized
  */
-router.get('/all', serviceController.getServices);
+router.get("/all", serviceController.getServices);
 
 /**
  * @swagger
@@ -51,7 +51,7 @@ router.get('/all', serviceController.getServices);
  *       404:
  *         description: Service not found
  */
-router.get('/', verifyToken, isAdmin, serviceController.getServiceById);
+router.get("/", verifyToken, isAdmin, serviceController.getServiceById);
 
 /**
  * @swagger
@@ -61,7 +61,7 @@ router.get('/', verifyToken, isAdmin, serviceController.getServiceById);
  *     description: Create a new service for the authenticated user.
  *     tags: [Service]
  *     security:
- *       - BearerAuth: [] 
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -85,6 +85,9 @@ router.get('/', verifyToken, isAdmin, serviceController.getServiceById);
  *               description:
  *                 type: string
  *                 description: Additional information about the service
+ *               serviceType:
+ *                 type: string
+ *                 description: Service type
  *     responses:
  *       201:
  *         description: Service created successfully
@@ -93,7 +96,7 @@ router.get('/', verifyToken, isAdmin, serviceController.getServiceById);
  *       401:
  *         description: Unauthorized
  */
-router.post('/create',verifyToken, isAdmin, serviceController.createService);
+router.post("/create", verifyToken, isAdmin, serviceController.createService);
 
 /**
  * @swagger
@@ -141,7 +144,7 @@ router.post('/create',verifyToken, isAdmin, serviceController.createService);
  *       404:
  *         description: Service not found
  */
-router.put('/update',verifyToken, isAdmin, serviceController.updateService);
+router.put("/update", verifyToken, isAdmin, serviceController.updateService);
 
 /**
  * @swagger
@@ -167,6 +170,6 @@ router.put('/update',verifyToken, isAdmin, serviceController.updateService);
  *       404:
  *         description: Service not found
  */
-router.delete('/',verifyToken, isAdmin, serviceController.deleteService);
+router.delete("/", verifyToken, isAdmin, serviceController.deleteService);
 
 module.exports = router;
