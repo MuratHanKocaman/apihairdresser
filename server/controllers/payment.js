@@ -30,6 +30,14 @@ exports.createPayment = async (req, res, next) => {
 
   try {
     const savedPayment = await newPayment.save();
+
+    // Eğer appointment verildiyse ilgili appointment'ın paymentId alanını güncelle
+    if (appointment) {
+      await Appointment.findByIdAndUpdate(appointment, {
+        paymentId: savedPayment._id,
+      });
+    }
+
     res.status(201).json(savedPayment);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -84,12 +92,10 @@ exports.getMonthlyPayments = async (req, res, next) => {
     yearInt < 1000 ||
     yearInt > 9999
   ) {
-    return res
-      .status(400)
-      .json({
-        message:
-          "Invalid month or year format. Use numeric values: month (1-12), year (e.g., 2024)",
-      });
+    return res.status(400).json({
+      message:
+        "Invalid month or year format. Use numeric values: month (1-12), year (e.g., 2024)",
+    });
   }
 
   try {
