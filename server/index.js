@@ -24,11 +24,22 @@ const { verifyToken, isAdmin } = require("./middleware/authMiddleware");
 dotenv.config();
 const app = express();
 
+// CORS ayarları
+const allowedOrigins = ["http://localhost:3000", "https://barbaria.vercel.app"];
+
 // Middleware'leri kullan
 app.use(
   cors({
-    origin: "http://localhost:3000", // Frontend'in çalıştığı port
-    credentials: true,
+    origin: function (origin, callback) {
+      // `allowedOrigins` dizisinde bulunan kaynaklara izin veriyoruz
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(
+          new Error("CORS policy does not allow access from this origin")
+        );
+      }
+    },
   })
 );
 app.use(cookieParser());
