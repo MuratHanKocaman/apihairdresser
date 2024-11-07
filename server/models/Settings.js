@@ -11,32 +11,32 @@ const settingsSchema = new mongoose.Schema(
       monday: {
         open: String,
         close: String,
-        closed: { type: Boolean, default: true },
+        closed: { type: Boolean },
       },
       tuesday: {
         open: String,
         close: String,
-        closed: { type: Boolean, default: true },
+        closed: { type: Boolean },
       },
       wednesday: {
         open: String,
         close: String,
-        closed: { type: Boolean, default: true },
+        closed: { type: Boolean },
       },
       thursday: {
         open: String,
         close: String,
-        closed: { type: Boolean, default: true },
+        closed: { type: Boolean },
       },
       friday: {
         open: String,
         close: String,
-        closed: { type: Boolean, default: true },
+        closed: { type: Boolean },
       },
       saturday: {
         open: String,
         close: String,
-        closed: { type: Boolean, default: true },
+        closed: { type: Boolean },
       },
       sunday: {
         open: String,
