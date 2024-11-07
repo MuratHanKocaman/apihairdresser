@@ -25,7 +25,11 @@ dotenv.config();
 const app = express();
 
 // CORS ayarları
-const allowedOrigins = ["http://localhost:3000", "https://barbaria.vercel.app"];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://barbaria.vercel.app",
+  "https://apihairdresser.onrender.com",
+];
 
 // Middleware'leri kullan
 app.use(
