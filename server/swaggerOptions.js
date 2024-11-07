@@ -11,7 +11,7 @@ const options = {
     },
     servers: [
       {
-        url: "https://apihairdresser.onrender.com/", // API'nizin çalıştığı URL
+        url: "https://apihairdresser.onrender.com", // API'nizin çalıştığı URL
       },
     ],
     components: {
