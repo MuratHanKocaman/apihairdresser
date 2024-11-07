@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const appointmentController = require('../controllers/appointment.js');
-const { verifyToken } = require('../middleware/authMiddleware.js');
+const appointmentController = require("../controllers/appointment.js");
+const { verifyToken } = require("../middleware/authMiddleware.js");
 
 /**
  * @swagger
@@ -24,7 +24,7 @@ const { verifyToken } = require('../middleware/authMiddleware.js');
  *       401:
  *         description: Unauthorized
  */
-router.get('/', appointmentController.getAppointments);
+router.get("/", appointmentController.getAppointments);
 
 // Tek bir randevuyu getir
 /**
@@ -51,7 +51,11 @@ router.get('/', appointmentController.getAppointments);
  *       401:
  *         description: Unauthorized
  */
-router.get('/appointment', verifyToken, appointmentController.getAppointmentById);
+router.get(
+  "/appointment",
+  verifyToken,
+  appointmentController.getAppointmentById
+);
 
 // Yeni randevu oluştur
 /**
@@ -103,7 +107,7 @@ router.get('/appointment', verifyToken, appointmentController.getAppointmentById
  *       401:
  *         description: Yetkisiz erişim
  */
-router.post('/', appointmentController.createAppointment);
+router.post("/", appointmentController.createAppointment);
 
 // Randevuyu güncelle
 /**
@@ -132,6 +136,12 @@ router.post('/', appointmentController.createAppointment);
  *               customerId:
  *                 type: string
  *                 description: Updated customer ID (optional)
+ *               name:
+ *                 type: string
+ *                 description: Updated name (required if customerId is not provided)
+ *               phone:
+ *                 type: string
+ *                 description: Updated phone number (required if customerId is not provided)
  *               staffId:
  *                 type: string
  *                 description: Updated staff ID
@@ -140,14 +150,13 @@ router.post('/', appointmentController.createAppointment);
  *                 items:
  *                   type: string
  *                 description: Array of updated service IDs
- *               date:
+ *               appointmentDate:
  *                 type: string
- *                 description: Updated date (YYYY-MM-DD)
- *               time:
- *                 type: string
- *                 description: Updated time (HH:MM)
+ *                 format: date-time
+ *                 description: Updated appointment date and time (ISO 8601 format)
  *               status:
  *                 type: string
+ *                 enum: [pending, confirmed, completed, canceled]
  *                 description: Updated status of the appointment
  *               notes:
  *                 type: string
@@ -162,7 +171,7 @@ router.post('/', appointmentController.createAppointment);
  *       401:
  *         description: Unauthorized
  */
-router.put('/update', verifyToken, appointmentController.updateAppointment);
+router.put("/update", verifyToken, appointmentController.updateAppointment);
 
 // Randevuyu sil
 /**
@@ -189,6 +198,6 @@ router.put('/update', verifyToken, appointmentController.updateAppointment);
  *       401:
  *         description: Unauthorized
  */
-router.delete('/delete', verifyToken, appointmentController.deleteAppointment);
+router.delete("/delete", verifyToken, appointmentController.deleteAppointment);
 
 module.exports = router;
