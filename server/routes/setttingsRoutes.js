@@ -53,7 +53,7 @@ const { verifyToken, isAdmin } = require("../middleware/authMiddleware.js");
  *       401:
  *         description: Yetkisiz
  */
-router.get("/", verifyToken, settingsController.getSettings);
+router.get("/", settingsController.getSettings);
 
 /**
  * @swagger
