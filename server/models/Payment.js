@@ -5,6 +5,12 @@ const paymentSchema = new mongoose.Schema(
     appointment: { type: mongoose.Schema.Types.ObjectId, ref: "Appointment" },
     amount: { type: Number, required: true }, // Ödenen tutar
     paymentDate: { type: Date, default: Date.now }, // Ödeme tarihi
+    paymentType: {
+      type: String,
+      enum: ["service", "product"],
+      default: "service",
+      required: true,
+    },
     method: {
       type: String,
       enum: ["credit_card", "cash"],

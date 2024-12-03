@@ -1,5 +1,6 @@
 const Payment = require("../models/Payment.js");
 const Appointment = require("../models/Appointment.js");
+const Product = require("../models/Product.js");
 
 // Tüm ödemeleri listele
 exports.getPayments = async (req, res, next) => {
@@ -26,17 +27,35 @@ exports.getPaymentById = async (req, res, next) => {
 
 // Yeni ödeme oluştur
 exports.createPayment = async (req, res, next) => {
-  const { appointment, amount, method, status } = req.body;
-  const newPayment = new Payment({ appointment, amount, method, status });
+  const { appointment, amount, method, status, paymentType, product } =
+    req.body;
+
+  // Yeni ödeme belgesi oluştur
+  const newPayment = new Payment({
+    appointment,
+    amount,
+    method,
+    status,
+    paymentType,
+  });
 
   try {
     const savedPayment = await newPayment.save();
 
-    // Eğer appointment verildiyse ilgili appointment'ın paymentId alanını güncelle
-    if (appointment) {
+    // Eğer ödeme tipi "service" ise ilgili randevuyu güncelle
+    if (paymentType === "service" && appointment) {
       await Appointment.findByIdAndUpdate(appointment, {
         paymentId: savedPayment._id,
       });
+    }
+
+    // Eğer ödeme tipi "product" ise ürünle ilişkilendir
+    if (paymentType === "product" && product) {
+      // Ürünün var olup olmadığını kontrol edebiliriz
+      const existingProduct = await Product.findById(product);
+      if (!existingProduct) {
+        return res.status(400).json({ message: "Product not found" });
+      }
     }
 
     res.status(201).json(savedPayment);

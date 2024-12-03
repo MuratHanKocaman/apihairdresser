@@ -16,6 +16,7 @@ const paymentRoutes = require("./routes/paymentRoutes");
 const serviceRoutes = require("./routes/serviceRoutes");
 const settingsRoutes = require("./routes/setttingsRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const productRoutes = require("./routes/productRoutes");
 
 // Middleware'ler
 const { verifyToken, isAdmin } = require("./middleware/authMiddleware");
@@ -28,6 +29,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:3000",
   "https://barbaria.vercel.app",
+  "http://localhost:5000",
   "https://apihairdresser.onrender.com",
 ];
 
@@ -78,6 +80,7 @@ app.use("/api/appointments", appointmentRoutes); // Randevu işlemleri
 app.use("/api/payments", verifyToken, isAdmin, paymentRoutes); // Ödeme işlemleri
 app.use("/api/services", serviceRoutes); // Hizmet işlemleri
 app.use("/api/settings", settingsRoutes); // Admin yetkisi gerektiren ayarlar ile ilgili işlemler
+app.use("/api/products", productRoutes);
 
 // Hataları yakala
 app.use((err, req, res, next) => {

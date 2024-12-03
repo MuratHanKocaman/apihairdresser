@@ -12,6 +12,7 @@ const options = {
     servers: [
       {
         url: "https://apihairdresser.onrender.com", // API'nizin çalıştığı URL
+        url: "http://localhost:5000",
       },
     ],
     components: {
